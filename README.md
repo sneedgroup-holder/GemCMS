@@ -74,6 +74,9 @@ Regular text is just written as-is.
 No special formatting needed.
 ```
 
+(Replace "\"s used in the gemtext example with nothing. This is a hacky
+work-around to escape the gemtext pre-formatted text example.)
+
 ## License
 
 MIT 
