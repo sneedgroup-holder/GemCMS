@@ -1,0 +1,22 @@
+{
+  "name": "gemcms",
+  "version": "1.0.0",
+  "description": "A simple CLI-based CMS for Gemtext blog sites",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "gemcms": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js"
+  },
+  "keywords": ["gemini", "gemtext", "cms", "blog"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "dotenv": "^16.4.1",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0"
+  }
+} 
