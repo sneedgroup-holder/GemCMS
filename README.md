@@ -65,10 +65,10 @@ Posts are written in Gemtext format (.gmi files). Here's a quick reference:
 => https://example.com Link description
 => gemini://example.com Gemini link
 
-```text
+\```
 This is preformatted text
 It preserves whitespace
-```
+\```
 
 Regular text is just written as-is.
 No special formatting needed.
