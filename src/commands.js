@@ -81,6 +81,69 @@ export async function deletePost(title) {
   await fs.remove(filePath);
 }
 
+export async function editPost(title) {
+  const slug = slugify(title);
+  const files = await fs.readdir(CONTENT_DIR);
+  const draftFiles = await fs.readdir(DRAFTS_DIR);
+  
+  const file = [...files, ...draftFiles].find(f => f.includes(slug));
+  if (!file) throw new Error('Post not found');
+
+  const filePath = files.includes(file) 
+    ? join(CONTENT_DIR, file)
+    : join(DRAFTS_DIR, file);
+
+  const editor = process.env.EDITOR || 'nano';
+  const { spawn } = await import('child_process');
+  
+  return new Promise((resolve, reject) => {
+    const child = spawn(editor, [filePath], {
+      stdio: 'inherit',
+      shell: true
+    });
+
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Editor exited with code ${code}`));
+      }
+    });
+
+    child.on('error', (err) => {
+      reject(new Error(`Failed to launch editor: ${err.message}`));
+    });
+  });
+}
+
+export async function pushDraft(title) {
+  const slug = slugify(title);
+  const draftFiles = await fs.readdir(DRAFTS_DIR);
+  
+  const file = draftFiles.find(f => f.includes(slug));
+  if (!file) throw new Error('Draft not found');
+
+  const sourcePath = join(DRAFTS_DIR, file);
+  const targetPath = join(CONTENT_DIR, file);
+  
+  await fs.move(sourcePath, targetPath);
+  return { file, sourcePath, targetPath };
+}
+
+export async function popPublic(title) {
+  const slug = slugify(title);
+  const files = await fs.readdir(CONTENT_DIR);
+  
+  const file = files.find(f => f.includes(slug));
+  if (!file) throw new Error('Published post not found');
+
+  const sourcePath = join(CONTENT_DIR, file);
+  const targetPath = join(DRAFTS_DIR, file);
+  
+  await fs.move(sourcePath, targetPath);
+  return { file, sourcePath, targetPath };
+}
+
 export async function buildSite() {
   // Clear public directory
   await fs.emptyDir(PUBLIC_DIR);

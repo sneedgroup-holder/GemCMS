@@ -3,7 +3,7 @@
 import { program } from 'commander';
 import { config } from 'dotenv';
 import chalk from 'chalk';
-import { createPost, listPosts, deletePost, buildSite } from './commands.js';
+import { createPost, listPosts, deletePost, buildSite, editPost, pushDraft, popPublic } from './commands.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs-extra';
@@ -51,6 +51,44 @@ program
       console.log(chalk.green(`✓ Deleted post: ${title}`));
     } catch (error) {
       console.error(chalk.red(`Error deleting post: ${error.message}`));
+    }
+  });
+
+program
+  .command('edit <title>')
+  .description('Edit a blog post or draft')
+  .action(async (title) => {
+    try {
+      await editPost(title);
+      console.log(chalk.green(`✓ Finished editing post: ${title}`));
+    } catch (error) {
+      console.error(chalk.red(`Error editing post: ${error.message}`));
+    }
+  });
+
+program
+  .command('push-draft <title>')
+  .description('Push a draft post to published state')
+  .action(async (title) => {
+    try {
+      const result = await pushDraft(title);
+      console.log(chalk.green(`✓ Pushed draft to published: ${title}`));
+      console.log(chalk.gray(`Moved from ${result.sourcePath} to ${result.targetPath}`));
+    } catch (error) {
+      console.error(chalk.red(`Error pushing draft: ${error.message}`));
+    }
+  });
+
+program
+  .command('pop-public <title>')
+  .description('Move a published post back to draft state')
+  .action(async (title) => {
+    try {
+      const result = await popPublic(title);
+      console.log(chalk.green(`✓ Moved published post to draft: ${title}`));
+      console.log(chalk.gray(`Moved from ${result.sourcePath} to ${result.targetPath}`));
+    } catch (error) {
+      console.error(chalk.red(`Error moving to draft: ${error.message}`));
     }
   });
 

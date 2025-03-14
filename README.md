@@ -31,6 +31,19 @@ To list drafts:
 gemcms list --drafts
 ```
 
+### Edit a post
+```bash
+gemcms edit "My First Post"
+```
+This will open the post in your default text editor (set by $EDITOR environment variable) or nano if none is set.
+The command works for both published posts and drafts.
+
+### Manage drafts and published posts
+```bash
+gemcms push-draft "My Draft Post"  # Move a draft to published state
+gemcms pop-public "My Post"        # Move a published post back to draft state
+```
+
 ### Delete a post
 ```bash
 gemcms delete "My First Post"
